@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:units_conversions/class/Validator.dart';
 
-import '../Convert.dart';
+import '../class/Convertor.dart';
 
 
 class ConvertingScreen extends StatefulWidget {
@@ -12,85 +13,106 @@ class ConvertingScreen extends StatefulWidget {
 }
 
 class _ConvertingScreenState extends State<ConvertingScreen> {
-  final units = ['Km','m'];
+  final units = ['Km','m','cm','l'];
+  List<String> units2 = [];
   String? value;
   String? resultValue;
   String? result;
   TextEditingController enterValue = TextEditingController();
-  final Convertor convertor = Convertor();
+  final _form = GlobalKey<FormState>();
+  bool isSelect = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+        child: Form(
+          key: _form,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(child:_buildValue(),),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(child:_buildValue(),),
 
-                DropdownButton<String>(
-                  items: units.map(buildMenuUnit).toList(),
-                  onChanged: (value)=> setState(()=>
-                    this.value = value),
-                  value: value,
-                ),
-
-
-
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(child: Text('$result')),
-
-                DropdownButton<String>(
-                  items: units.map(buildMenuUnit).toList(),
-                  onChanged: (resultValue)=> setState(()=>
-                  this.resultValue = resultValue),
-                  value: resultValue,
-                ),
-
-
-
-              ],
-            ),
-            TextButton(
-                onPressed: (){
-                    var r = _convert(value, resultValue, enterValue.text);
-                    print(value);
-                    print(resultValue);
-                    print(enterValue.text);
+                  DropdownButton<String>(
+                    items: units.map(buildMenuUnit).toList(),
+                    onChanged: (value)=>
                     setState(() {
-                      result = r;
-                    });
+                      this.value = value;
+                      isSelect = false;
+                      units2= Validator.selectUnit(value);
+                    }),
+                    value: value,
+                  ),
 
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                      vertical: 6, horizontal: 6),
-                  width: double.infinity,
-                  child: const Center(
-                    child: Text(
-                      'Convert',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
+
+
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Visibility(
+                      child:(result == null) ?Expanded(child: Text('result'))
+                          :Expanded(child: Text("$result")),
+                  ),
+
+
+
+                  DropdownButton<String>(
+                    items: units2.map(buildMenuUnit).toList(),
+                    onChanged: isSelect ?
+                        null
+                    : (resultValue)=>
+                        setState(() {
+                          this.resultValue = resultValue;
+
+                        }),
+                    value: resultValue,
+                  ),
+
+
+
+                ],
+              ),
+              TextButton(
+                  onPressed: (){
+
+                    var r = Convertor.convert(value, resultValue, enterValue.text,_form);
+                      print(value);
+                      print(resultValue);
+                      print(enterValue.text);
+                      setState(() {
+                        result = r.toString();
+                      });
+                      print(result);
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                        vertical: 6, horizontal: 6),
+                    width: double.infinity,
+                    child: const Center(
+                      child: Text(
+                        'Convert',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
-                ),
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<
-                        RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(27),
-                        )),
-                    backgroundColor: MaterialStateProperty.all(
-                        const Color(0xff102248))))
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<
+                          RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(27),
+                          )),
+                      backgroundColor: MaterialStateProperty.all(
+                          const Color(0xff102248))))
 
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -99,6 +121,7 @@ class _ConvertingScreenState extends State<ConvertingScreen> {
   DropdownMenuItem<String> buildMenuUnit(String unit)=>
       DropdownMenuItem(value: unit, child: Text(
         unit,
+
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20
@@ -123,6 +146,9 @@ class _ConvertingScreenState extends State<ConvertingScreen> {
         controller: enterValue,
         keyboardType: TextInputType.number,
         textAlign: TextAlign.center,
+        validator: (value){
+          return Validator.enterValue(value);
+        },
         decoration: InputDecoration(
             contentPadding:
             EdgeInsets.symmetric(vertical: 5, horizontal: 5),
@@ -134,13 +160,5 @@ class _ConvertingScreenState extends State<ConvertingScreen> {
 
   }
 
-  static _convert(uValue,rValue,num1){
-    if(uValue == 'Km' && rValue == 'm'){
-      var num  = int.parse(num1);
 
-      var r = num * 1000;
-      var result = r.toString();
-      return result;
-    }
-  }
 }
