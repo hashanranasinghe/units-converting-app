@@ -13,7 +13,7 @@ class ConvertingScreen extends StatefulWidget {
 }
 
 class _ConvertingScreenState extends State<ConvertingScreen> {
-  final units = ['Km','m','cm','l'];
+  final units = ['Km','m','cm','l','ml','Kg','mg','g'];
   List<String> units2 = [];
   String? value;
   String? resultValue;
