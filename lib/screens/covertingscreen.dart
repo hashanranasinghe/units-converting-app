@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:units_conversions/class/Validator.dart';
 
@@ -13,7 +15,10 @@ class ConvertingScreen extends StatefulWidget {
 }
 
 class _ConvertingScreenState extends State<ConvertingScreen> {
-  final units = ['Km','m','cm','l','ml','Kg','mg','g'];
+  // final units = ['Km','m','cm','l','ml','Kg','mg','g'];
+  List<String> units = [];
+  final selectUnits = ['Length','Liquid','Mars','Bytes'];
+  String? selectValue;
   List<String> units2 = [];
   String? value;
   String? resultValue;
@@ -21,6 +26,7 @@ class _ConvertingScreenState extends State<ConvertingScreen> {
   TextEditingController enterValue = TextEditingController();
   final _form = GlobalKey<FormState>();
   bool isSelect = true;
+  bool isSelectValue = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,6 +36,19 @@ class _ConvertingScreenState extends State<ConvertingScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text('Select the unit'),
+              DropdownButton<String>(
+                items: selectUnits.map(buildMenuUnit).toList(),
+                onChanged: (selectValue)=>
+                    setState(() {
+                      this.selectValue = selectValue;
+                      isSelectValue = false;
+                      units = Validator.selectValue(selectValue);
+                    }),
+                value: selectValue,
+              ),
+
+
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -41,6 +60,7 @@ class _ConvertingScreenState extends State<ConvertingScreen> {
                     onChanged: (value)=>
                     setState(() {
                       this.value = value;
+                      print(value);
                       isSelect = false;
                       units2= Validator.selectUnit(value);
                     }),

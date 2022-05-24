@@ -19,6 +19,25 @@ static selectUnit(uValue){
   }else if(uValue == 'Kg' || uValue == 'mg' || uValue == 'g'){
     var list = ['Kg','g','mg'];
     return list;
+  }else if(uValue == 'B'|| uValue=='KB' || uValue == 'MB' || uValue == 'GB'|| uValue=='TB'){
+    var list =['B','KB','MB','GB','TB'];
+    return list;
+  }
+}
+
+static selectValue(sValue){
+  if(sValue == 'Length'){
+    var list = ['Km','m','cm'];
+    return list;
+  }else if(sValue == 'Liquid'){
+    var list = ['l','ml'];
+    return list;
+  }else if(sValue == 'Mars'){
+    var list=['Kg','g','mg'];
+    return list;
+  }else if(sValue == 'Bytes'){
+    var list =['B','KB','MB','GB','TB'];
+    return list;
   }
 }
 

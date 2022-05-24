@@ -46,6 +46,11 @@ class Convertor {
         }
         var result = 'result';
         return result;
+      }else if(uValue == 'B' || uValue == 'KB' || uValue == 'MB' || uValue == 'GB' || uValue == 'TB'){
+        if(uValue == 'B' && rValue == 'KB'){
+          double result= double.parse(num1) / 1024;
+          return result;
+        }
       }
     }
   }
