@@ -7,6 +7,9 @@ class Convertor {
         if (uValue == 'Km' && rValue == 'm') {
           var result = double.parse(num1) * 1000;
           return result;
+        }else if(uValue == 'Km' && rValue == 'Km') {
+          var result = double.parse(num1) * 1;
+          return result;
         } else if (uValue == 'm' && rValue == 'Km') {
           double result = double.parse(num1) / 1000;
           return result;
